@@ -1,5 +1,6 @@
 package com.cas.sharding;
 
+import com.google.common.collect.Range;
 import org.apache.shardingsphere.sharding.api.sharding.standard.PreciseShardingValue;
 import org.apache.shardingsphere.sharding.api.sharding.standard.RangeShardingValue;
 import org.apache.shardingsphere.sharding.api.sharding.standard.StandardShardingAlgorithm;
@@ -60,29 +61,29 @@ public class MonthStrategyShardingAlgorithm implements StandardShardingAlgorithm
     @Override
     public Collection<String> doSharding(Collection<String> availableTargetNames, RangeShardingValue<LocalDateTime> rangeShardingValue) {
         Collection<String> collect = new ArrayList<>();
-//        if (rangeShardingValue != null) {
-//            //获得范围区间值
-//            Range<LocalDateTime> valueRange = rangeShardingValue.getValueRange();
-//            //获得返回区间值下限
-//            LocalDateTime slowerEndpointDate = valueRange.lowerEndpoint();
-//            //获得范围区间值上限
-//            LocalDateTime supperEndpointDate = valueRange.upperEndpoint();
-//            //获得下限年份
-//            int nStartYear = Integer.valueOf(getSuffixByYearMonth(slowerEndpointDate));
-//            //获得上限年份
-//            int nEndYear = Integer.valueOf(getSuffixByYearMonth(supperEndpointDate));
-//            //根据上下限范围，循环取值判断对应的表名称，返回符合条件的表名称集合
-//            for (int i = nStartYear; i <= nEndYear; i++) {
-//                for (String each : availableTargetNames) {
-//                    if (each.endsWith(String.valueOf(i))) {
-//                        if(!collect.contains(each)){
-//                            collect.add(each);
-//                        }
-//                    }
-//                }
-//            }
-//            return collect;
-//        }
+        if (rangeShardingValue != null) {
+            //获得范围区间值
+            Range<LocalDateTime> valueRange = rangeShardingValue.getValueRange();
+            //获得返回区间值下限
+            LocalDateTime slowerEndpointDate = valueRange.lowerEndpoint();
+            //获得范围区间值上限
+            LocalDateTime supperEndpointDate = valueRange.upperEndpoint();
+            //获得下限年份
+            int nStartYear = Integer.parseInt(slowerEndpointDate.format(yyyyMM));
+            //获得上限年份
+            int nEndYear = Integer.parseInt(supperEndpointDate.format(yyyyMM));
+            //根据上下限范围，循环取值判断对应的表名称，返回符合条件的表名称集合
+            for (int i = nStartYear; i <= nEndYear; i++) {
+                for (String each : availableTargetNames) {
+                    if (each.endsWith(String.valueOf(i))) {
+                        if(!collect.contains(each)){
+                            collect.add(each);
+                        }
+                    }
+                }
+            }
+            return collect;
+        }
         return null;
     }
  
