@@ -1,5 +1,6 @@
 package com.cas.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("t_user")
 public class User {
 
+    @TableId
     private Long userId;
     private String username;
     private String ustatus;

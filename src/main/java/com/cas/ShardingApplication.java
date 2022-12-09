@@ -3,6 +3,7 @@ package com.cas;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @author: xianglong[1391086179@qq.com]
@@ -10,13 +11,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @version: V1.0
  * @review:
  */
-@SpringBootApplication(scanBasePackages = "com.cas")
+@SpringBootApplication
 @MapperScan("com.cas.mapper")
-public class TestApplication {
+public class ShardingApplication {
 
     public static void main(String[] args) {
         try{
-            SpringApplication.run(TestApplication.class, args);
+            SpringApplication.run(ShardingApplication.class, args);
             System.out.println("启动成功！！！！");
         } catch (Exception e) {
             System.out.println("启动失败！！！！");

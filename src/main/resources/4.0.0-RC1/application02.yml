@@ -1,3 +1,4 @@
+# org.apache.shardingsphere:sharding-jdbc-spring-boot-starter:4.0.0-RC1 配置如下，每个版本配置都有小变动，详细看官网
 server:
   port: 8088
 spring:

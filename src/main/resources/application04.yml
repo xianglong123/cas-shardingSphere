@@ -1,3 +1,4 @@
+# org.apache.shardingsphere:sharding-jdbc-spring-boot-starter:5.1.0 配置如下，每个版本配置都有小变动，详细看官网
 server:
   port: 8088
 spring:
@@ -9,41 +10,25 @@ spring:
         # 配置数据源具体数据
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/user_db?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+        url: jdbc:mysql://localhost:3306/user_db?useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
         username: root
         password: 12345678
       m1:
         # 配置数据源具体数据
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/edu_db_1?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+        url: jdbc:mysql://localhost:3306/edu_db_1?useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
         username: root
         password: 12345678
       m2:
         # 配置数据源具体数据
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/edu_db_2?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+        url: jdbc:mysql://localhost:3306/edu_db_2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
         username: root
         password: 12345678
     rules:
       sharding:
-        sharding-algorithms:
-          # 算法名用-连接，不要用下划线_连接
-          tablesource-class-based:
-            type: CLASS_BASED
-            props:
-              strategy: standard
-              # 自定义标准分配算法
-              algorithmClassName: com.cas.sharding.OTAStrategyShardingAlgorithm
-          course-table:
-            type: INLINE
-            props:
-              algorithm-expression: course_$->{cid % 2 + 1}
-          course-database:
-            type: INLINE
-            props:
-              algorithm-expression: m$->{user_id % 2 + 1}
         tables:
           t_user:
             actual-data-nodes: m$->{0}.t_user
@@ -68,13 +53,15 @@ spring:
             keyGenerateStrategy:
               column: cid
               keyGeneratorName: SNOWFLAKE
-          t_log:
-            actual-data-nodes: m$->{0}.t_log_${2022}$->{(11..12).collect{t ->t.toString().padLeft(2,'0')}}$->{(1..31).collect{d -> d.toString().padLeft(2,'0')}}
-            tableStrategy:
-              standard:
-                sharding-column: request_time
-                shardingAlgorithmName: tablesource-class-based
-
+        sharding-algorithms:
+          course-table:
+            type: INLINE
+            props:
+              algorithm-expression: course_$->{cid % 2 + 1}
+          course-database:
+            type: INLINE
+            props:
+              algorithm-expression: m$->{user_id % 2 + 1}
     props:
       sql-show: true
 

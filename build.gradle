@@ -15,10 +15,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alibaba:druid-spring-boot-starter:1.1.10'
+    implementation 'com.alibaba:druid:1.2.9'
     implementation 'mysql:mysql-connector-java:8.0.13'
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.2'
-    implementation 'org.apache.shardingsphere:sharding-jdbc-spring-boot-starter:4.0.0-RC1'
+    implementation 'org.apache.shardingsphere:shardingsphere-jdbc-core-spring-boot-starter:5.1.0'
+    implementation 'org.apache.tomcat:tomcat-dbcp:10.0.16'
     // 其他
     implementation 'com.alibaba:fastjson:1.2.61'
     implementation 'org.springframework.boot:spring-boot-starter-web'

@@ -1,6 +1,9 @@
 package com.cas.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+
 /**
  * @author xiang_long
  * @version 1.0
@@ -8,6 +11,8 @@ package com.cas.entity;
  * @desc
  */
 public class Course {
+
+    @TableId
     private Long cid;
     private String cname;
     private Long userId;
