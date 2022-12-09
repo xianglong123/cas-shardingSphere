@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
  * @date 2022/12/8 2:30 下午
  * @desc
  */
-@TableName("t_log_day")
-public class Log {
+@TableName("t_log_month")
+public class Logm {
 
     @TableId
     private Long logId;

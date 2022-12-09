@@ -30,12 +30,18 @@ spring:
       sharding:
         sharding-algorithms:
           # 算法名用-连接，不要用下划线_连接
-          tablesource-class-based:
+          tablesource-day-class-based:
             type: CLASS_BASED
             props:
               strategy: standard
               # 自定义标准分配算法
-              algorithmClassName: com.cas.sharding.OTAStrategyShardingAlgorithm
+              algorithmClassName: com.cas.sharding.DayStrategyShardingAlgorithm
+          tablesource-month-class-based:
+            type: CLASS_BASED
+            props:
+              strategy: standard
+              # 自定义标准分配算法
+              algorithmClassName: com.cas.sharding.MonthStrategyShardingAlgorithm
           course-table:
             type: INLINE
             props:
@@ -68,12 +74,20 @@ spring:
             keyGenerateStrategy:
               column: cid
               keyGeneratorName: SNOWFLAKE
-          t_log:
+          t_log_day:
+            # 按日期分片，测试功能使用
             actual-data-nodes: m$->{0}.t_log_${2022}$->{(11..12).collect{t ->t.toString().padLeft(2,'0')}}$->{(1..31).collect{d -> d.toString().padLeft(2,'0')}}
             tableStrategy:
               standard:
                 sharding-column: request_time
-                shardingAlgorithmName: tablesource-class-based
+                shardingAlgorithmName: tablesource-day-class-based
+          t_log_month:
+            # 按月分片，普遍使用
+            actual-data-nodes: m$->{0}.t_log_${2022..2027}$->{(1..12).collect{t ->t.toString().padLeft(2,'0')}}
+            tableStrategy:
+              standard:
+                sharding-column: request_time
+                shardingAlgorithmName: tablesource-month-class-based
 
     props:
       sql-show: true

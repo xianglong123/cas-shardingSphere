@@ -7,13 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
- 
- 
+
+
 /**
  * @Description: sharding分表规则：按单月分表
  * @Author: lg
@@ -21,15 +20,11 @@ import java.util.Collection;
  * @Version: V1.0
  */
 @Component
-public class OTAStrategyShardingAlgorithm implements StandardShardingAlgorithm<LocalDateTime> {
+public class MonthStrategyShardingAlgorithm implements StandardShardingAlgorithm<LocalDateTime> {
 
-    private static final Logger log = LoggerFactory.getLogger(OTAStrategyShardingAlgorithm.class);
+    private static final Logger log = LoggerFactory.getLogger(MonthStrategyShardingAlgorithm.class);
 
-    private static final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-    public static String getSuffixByYearMonth(Date date) {
-        return date.toString().replaceAll("-","").substring(0,6);
-    }
+    private static final DateTimeFormatter yyyyMM = DateTimeFormatter.ofPattern("yyyyMM");
 
 
     /**
@@ -42,7 +37,7 @@ public class OTAStrategyShardingAlgorithm implements StandardShardingAlgorithm<L
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<LocalDateTime> shardingValue) {
         if (shardingValue != null) {
             //获取年份
-            String ymd = shardingValue.getValue().format(yyyyMMdd) ;
+            String ymd = shardingValue.getValue().format(yyyyMM) ;
             //根据年月判断表名集合是否存在对应表表名集合，存在时返回表名
             for (String each : availableTargetNames) {
                 if (each.endsWith(ymd)) {
@@ -67,11 +62,11 @@ public class OTAStrategyShardingAlgorithm implements StandardShardingAlgorithm<L
         Collection<String> collect = new ArrayList<>();
 //        if (rangeShardingValue != null) {
 //            //获得范围区间值
-//            Range<Date> valueRange = rangeShardingValue.getValueRange();
+//            Range<LocalDateTime> valueRange = rangeShardingValue.getValueRange();
 //            //获得返回区间值下限
-//            Date slowerEndpointDate = valueRange.lowerEndpoint();
+//            LocalDateTime slowerEndpointDate = valueRange.lowerEndpoint();
 //            //获得范围区间值上限
-//            Date supperEndpointDate = valueRange.upperEndpoint();
+//            LocalDateTime supperEndpointDate = valueRange.upperEndpoint();
 //            //获得下限年份
 //            int nStartYear = Integer.valueOf(getSuffixByYearMonth(slowerEndpointDate));
 //            //获得上限年份
