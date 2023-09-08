@@ -31,8 +31,13 @@ spring:
         sharding-algorithms:
           # 算法名用-连接，不要用下划线_连接
           tablesource-day-class-based:
+            #自定义类分片算法 通过配置分片策略类型和算法类名，实现自定义扩展。
+            # CLASS_BASED 允许向算法类内传入额外的自定义属性，传入的属性可以通过属性名为 props 的 java.util.Properties 类实例取出。
             type: CLASS_BASED
             props:
+              # 如果strategy=standard 则自定义算法类需要实现org.apache.shardingsphere.sharding.api.sharding.standard.StandardShardingAlgorithm.java接口
+              # 如果strategy=COMPLEX，则自定义算法类需要实现org.apache.shardingsphere.sharding.api.sharding.complex.ComplexKeysShardingAlgorithm.java接口
+              # 如果strategy=HINT，则自定义算法类需要实现org.apache.shardingsphere.sharding.api.sharding.hint.HintShardingAlgorithm.java接口
               strategy: standard
               # 自定义标准分配算法
               algorithmClassName: com.cas.sharding.DayStrategyShardingAlgorithm
@@ -43,8 +48,10 @@ spring:
               # 自定义标准分配算法
               algorithmClassName: com.cas.sharding.MonthStrategyShardingAlgorithm
           course-table:
+            # inline分片算法：提供一个分片键和一个分片表达式来制定分片算法，这种方式配置简单，功能灵活，是分库分表最佳配置方式，满足大多数的分库分表场景
             type: INLINE
             props:
+              # 算法表达式 $标识一个需要计算的值，"->{算法}" 通过左边这种表达式去计算
               algorithm-expression: course_$->{cid % 2 + 1}
           course-database:
             type: INLINE
@@ -53,8 +60,10 @@ spring:
         tables:
           t_user:
             actual-data-nodes: m$->{0}.t_user
+            # 主键的生成规则
             key-generator:
               column: user_id
+              # 雪花算法
               type: SNOWFLAKE
             table-strategy:
               inline:
@@ -74,13 +83,16 @@ spring:
             keyGenerateStrategy:
               column: cid
               keyGeneratorName: SNOWFLAKE
+          # 虚拟表名，sql文件要用虚拟表名替代实际表名
           t_log_day:
             # 按日期分片，测试功能使用
-            actual-data-nodes: m$->{0}.t_log_${2022}$->{(11..12).collect{t ->t.toString().padLeft(2,'0')}}$->{(1..31).collect{d -> d.toString().padLeft(2,'0')}}
+            # 下面的分片选择为：m0.t_log_[2022|2023|2024][1|2|3|4|5|6|7|8|9|10|11|12](月份不足两位左边补0，例如1月补0为01)[1..31](天数不足两位左边补0，例如1日补0为01)
+            actual-data-nodes: m$->{0}.t_log_${2022..2024}$->{(1..12).collect{t ->t.toString().padLeft(2,'0')}}$->{(1..31).collect{d -> d.toString().padLeft(2,'0')}}
             tableStrategy:
               standard:
                 sharding-column: request_time
                 shardingAlgorithmName: tablesource-day-class-based
+          # 虚拟表名，sql文件要用虚拟表名替代实际表名
           t_log_month:
             # 按月分片，普遍使用
             actual-data-nodes: m$->{0}.t_log_${2022..2027}$->{(1..12).collect{t ->t.toString().padLeft(2,'0')}}
@@ -88,7 +100,6 @@ spring:
               standard:
                 sharding-column: request_time
                 shardingAlgorithmName: tablesource-month-class-based
-
     props:
       sql-show: true
 
