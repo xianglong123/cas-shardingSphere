@@ -65,12 +65,23 @@ public class RecordMapperTests {
     }
 
     /**
-     * 区间查询
+     * 区间查询 between
      */
     @Test
     public void queryByBetween() {
         QueryWrapper<Record> wrapper = new QueryWrapper<>();
         wrapper.between("create_date",  LocalDate.of(2023, 1, 1),  LocalDate.of(2025, 1, 1));
+        List<Object> objects = recordMapper.selectObjs(wrapper);
+        System.out.println("======= " + objects.size());
+    }
+
+    /**
+     * 区间查询 in
+     */
+    @Test
+    public void queryByIn() {
+        QueryWrapper<Record> wrapper = new QueryWrapper<>();
+        wrapper.in("create_date",  LocalDate.of(2023, 2, 10),  LocalDate.of(2025, 2, 10));
         List<Object> objects = recordMapper.selectObjs(wrapper);
         System.out.println("======= " + objects.size());
     }
