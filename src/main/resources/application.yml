@@ -109,7 +109,7 @@ spring:
           # 虚拟表名，sql文件要用虚拟表名替代实际表名
           t_record_year:
             # 按月分片，普遍使用
-            actual-data-nodes: m$->{0}.t_record_${2022..2027}
+            actual-data-nodes: m$->{0}.t_record_${2022..2027},m$->{0}.t_record
             tableStrategy:
               standard:
                 sharding-column: create_date

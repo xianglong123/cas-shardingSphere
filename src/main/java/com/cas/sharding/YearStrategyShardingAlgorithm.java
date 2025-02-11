@@ -40,6 +40,10 @@ public class YearStrategyShardingAlgorithm implements StandardShardingAlgorithm<
         if (shardingValue != null) {
             //获取年份
             String year = shardingValue.getValue().format(yyyy).substring(0, 4) ;
+            if (Integer.valueOf(year) < 2024) {
+                // 采用历史表
+                return "t_record";
+            }
             //根据年月判断表名集合是否存在对应表表名集合，存在时返回表名
             for (String each : availableTargetNames) {
                 if (each.endsWith(year)) {
@@ -75,6 +79,13 @@ public class YearStrategyShardingAlgorithm implements StandardShardingAlgorithm<
             int nEndYear = Integer.parseInt(supperEndpointDate.format(yyyy).substring(0, 4));
             //根据上下限范围，循环取值判断对应的表名称，返回符合条件的表名称集合
             for (int i = nStartYear; i <= nEndYear; i++) {
+                if (Integer.valueOf(i) < 2024) {
+                    // 采用历史表
+                    if(!collect.contains("t_record")){
+                        collect.add("t_record");
+                    }
+                    continue;
+                }
                 for (String each : availableTargetNames) {
                     if (each.endsWith(String.valueOf(i))) {
                         if(!collect.contains(each)){

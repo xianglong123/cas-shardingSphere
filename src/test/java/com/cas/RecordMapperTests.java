@@ -33,9 +33,9 @@ public class RecordMapperTests {
     @Test
     public void add() {
         Record record = new Record();
-        record.setId("111");
-        record.setContent("222");
-        record.setCreateDate(LocalDate.now());
+        record.setId(UUID.randomUUID().toString().toUpperCase().replaceAll("-", ""));
+        record.setContent(UUID.randomUUID().toString().substring(0, 10));
+        record.setCreateDate(LocalDate.of(2022, 1, 1));
         record.setCreateTime(LocalDateTime.now());
         record.setUpdateTime(LocalDateTime.now());
         recordMapper.insert(record);
@@ -70,7 +70,7 @@ public class RecordMapperTests {
     @Test
     public void queryByBetween() {
         QueryWrapper<Record> wrapper = new QueryWrapper<>();
-        wrapper.between("create_date",  LocalDate.of(2023, 1, 1),  LocalDate.of(2025, 1, 1));
+        wrapper.between("create_date",  LocalDate.of(2020, 1, 1),  LocalDate.of(2025, 10, 1));
         List<Object> objects = recordMapper.selectObjs(wrapper);
         System.out.println("======= " + objects.size());
     }
@@ -81,7 +81,7 @@ public class RecordMapperTests {
     @Test
     public void queryByIn() {
         QueryWrapper<Record> wrapper = new QueryWrapper<>();
-        wrapper.in("create_date",  LocalDate.of(2023, 2, 10),  LocalDate.of(2025, 2, 10));
+        wrapper.in("create_date",  LocalDate.of(2022, 1, 1),  LocalDate.of(2025, 2, 10));
         List<Object> objects = recordMapper.selectObjs(wrapper);
         System.out.println("======= " + objects.size());
     }
